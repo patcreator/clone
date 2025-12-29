@@ -1,0 +1,413 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp clone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+        }
+        
+        /* WhatsApp brand colors */
+        .bg-whatsapp {
+            background-color: #00a884;
+        }
+        
+        .bg-chat-list {
+            background-color: #111b21;
+        }
+        
+        .bg-chat-header {
+            background-color: #202c33;
+        }
+        
+        .bg-chat-area {
+            background-color: #0c1317;
+        }
+        
+        .bg-message-sent {
+            background-color: #005c4b;
+        }
+        
+        .bg-message-received {
+            background-color: #202c33;
+        }
+        
+        .bg-input-area {
+            background-color: #202c33;
+        }
+        
+        /* WhatsApp pattern background for empty chat */
+        .whatsapp-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23202c33' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans h-screen overflow-hidden">
+    <div class="flex h-screen">
+        <!-- Left sidebar - Chat list -->
+        <div class="w-1/3 flex flex-col bg-chat-list border-r border-gray-800">
+            <!-- Profile header -->
+            <div class="flex items-center justify-between p-4 bg-gray-800">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center">
+                        <i class="fas fa-user text-gray-300"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h2 class="font-semibold">WhatsApp</h2>
+                        <p class="text-xs text-gray-400">Desktop</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-400 hover:text-gray-200">
+                        <i class="fas fa-users"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-gray-200">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Search and filter -->
+            <div class="p-3 bg-gray-800">
+                <div class="relative">
+                    <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <input 
+                        type="text" 
+                        placeholder="Search or start a new chat" 
+                        class="w-full pl-10 pr-4 py-2 bg-gray-700 text-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-whatsapp"
+                    >
+                </div>
+                
+                <!-- Filter tabs -->
+                <div class="flex mt-3 space-x-4 text-sm">
+                    <button class="text-whatsapp font-medium border-b-2 border-whatsapp pb-1">All</button>
+                    <button class="text-gray-400 hover:text-gray-200 pb-1">Unread</button>
+                    <button class="text-gray-400 hover:text-gray-200 pb-1">Favorites</button>
+                    <button class="text-gray-400 hover:text-gray-200 pb-1">Groups</button>
+                </div>
+            </div>
+            
+            <!-- Chat list -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar">
+                <!-- Chat item 1 -->
+                <div class="flex items-center p-3 hover:bg-gray-800 border-b border-gray-800 cursor-pointer">
+                    <div class="relative">
+                        <div class="w-12 h-12 rounded-full bg-green-600 flex items-center justify-center">
+                            <span class="font-bold">M</span>
+                        </div>
+                        <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-800"></div>
+                    </div>
+                    <div class="ml-3 flex-1 min-w-0">
+                        <div class="flex justify-between">
+                            <h3 class="font-semibold truncate">Md. Jean Baptiste</h3>
+                            <span class="text-xs text-gray-500">08:51</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <p class="text-sm text-gray-400 truncate">Aho ni sawa kbc</p>
+                            <span class="text-xs text-gray-500">2</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chat item 2 -->
+                <div class="flex items-center p-3 hover:bg-gray-800 border-b border-gray-800 cursor-pointer">
+                    <div class="w-12 h-12 rounded-full bg-purple-600 flex items-center justify-center">
+                        <span class="font-bold">H</span>
+                    </div>
+                    <div class="ml-3 flex-1 min-w-0">
+                        <div class="flex justify-between">
+                            <h3 class="font-semibold truncate">HiRYA Community</h3>
+                            <span class="text-xs text-gray-500">07:45</span>
+                        </div>
+                        <p class="text-sm text-gray-400 truncate">~UbakaVerse: This message ca...</p>
+                    </div>
+                </div>
+                
+                <!-- Chat item 3 -->
+                <div class="flex items-center p-3 hover:bg-gray-800 border-b border-gray-800 cursor-pointer">
+                    <div class="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center">
+                        <span class="font-bold">L</span>
+                    </div>
+                    <div class="ml-3 flex-1 min-w-0">
+                        <div class="flex justify-between">
+                            <h3 class="font-semibold truncate">LEVEL 2 BIT (Business inform...)</h3>
+                            <span class="text-xs text-gray-500">07:30</span>
+                        </div>
+                        <p class="text-sm text-gray-400 truncate">~Hilaneuwiringyimana24: ...</p>
+                    </div>
+                </div>
+                
+                <!-- Chat item 4 -->
+                <div class="flex items-center p-3 hover:bg-gray-800 border-b border-gray-800 cursor-pointer">
+                    <div class="w-12 h-12 rounded-full bg-yellow-600 flex items-center justify-center">
+                        <span class="font-bold">H</span>
+                    </div>
+                    <div class="ml-3 flex-1 min-w-0">
+                        <div class="flex justify-between">
+                            <h3 class="font-semibold truncate">HONGBRO Filmmaker™</h3>
+                            <span class="text-xs text-gray-500">07:45</span>
+                        </div>
+                        <p class="text-sm text-gray-400 truncate">Iya make wansabye narayikuze</p>
+                    </div>
+                </div>
+                
+                <!-- Chat item 5 -->
+                <div class="flex items-center p-3 hover:bg-gray-800 border-b border-gray-800 cursor-pointer">
+                    <div class="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center">
+                        <span class="font-bold">U</span>
+                    </div>
+                    <div class="ml-3 flex-1 min-w-0">
+                        <div class="flex justify-between">
+                            <h3 class="font-semibold truncate">UR HUYE TALENTHUB (**/**)</h3>
+                            <span class="text-xs text-gray-500">07:13</span>
+                        </div>
+                        <p class="text-sm text-gray-400 truncate">~MWAMI MEDIA TV: This mess...</p>
+                    </div>
+                </div>
+                
+                <!-- Chat item 6 -->
+                <div class="flex items-center p-3 hover:bg-gray-800 border-b border-gray-800 cursor-pointer">
+                    <div class="w-12 h-12 rounded-full bg-indigo-600 flex items-center justify-center">
+                        <span class="font-bold">B</span>
+                    </div>
+                    <div class="ml-3 flex-1 min-w-0">
+                        <div class="flex justify-between">
+                            <h3 class="font-semibold truncate">BIT GROUP1-UPDATES</h3>
+                            <span class="text-xs text-gray-500">07:00</span>
+                        </div>
+                        <p class="text-sm text-gray-400 truncate">~D Chance: try your chance! https://...</p>
+                    </div>
+                </div>
+                
+                <!-- Chat item 7 -->
+                <div class="flex items-center p-3 hover:bg-gray-800 border-b border-gray-800 cursor-pointer">
+                    <div class="w-12 h-12 rounded-full bg-pink-600 flex items-center justify-center">
+                        <span class="font-bold">G</span>
+                    </div>
+                    <div class="ml-3 flex-1 min-w-0">
+                        <div class="flex justify-between">
+                            <h3 class="font-semibold truncate">GUTEGURA UBUKWE B...</h3>
+                            <span class="text-xs text-gray-500">06:45</span>
+                        </div>
+                        <p class="text-sm text-gray-400 truncate">~D Chance: try your chance! https://...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right side - Chat area -->
+        <div class="w-2/3 flex flex-col bg-chat-area">
+            <!-- Chat header -->
+            <div class="flex items-center justify-between p-4 bg-chat-header">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center">
+                        <span class="font-bold">M</span>
+                    </div>
+                    <div class="ml-3">
+                        <h2 class="font-semibold">Md. Jean Baptiste</h2>
+                        <p class="text-xs text-gray-400">last seen today at 07:30</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <button class="text-gray-400 hover:text-gray-200">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-gray-200">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Chat messages area -->
+            <div class="flex-1 overflow-y-auto p-6 whatsapp-pattern custom-scrollbar">
+                <!-- Date separator -->
+                <div class="flex justify-center my-4">
+                    <div class="bg-gray-800 text-gray-400 text-xs px-3 py-1 rounded-full">
+                        TODAY
+                    </div>
+                </div>
+                
+                <!-- Received message -->
+                <div class="flex mb-4">
+                    <div class="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center mr-2 flex-shrink-0">
+                        <span class="font-bold text-xs">M</span>
+                    </div>
+                    <div class="max-w-xs lg:max-w-md">
+                        <div class="bg-message-received rounded-lg p-3 rounded-tl-none">
+                            <p class="text-sm">Aho ni sawa kbc</p>
+                        </div>
+                        <span class="text-xs text-gray-500 mt-1 block">08:51</span>
+                    </div>
+                </div>
+                
+                <!-- Sent message -->
+                <div class="flex justify-end mb-4">
+                    <div class="max-w-xs lg:max-w-md">
+                        <div class="bg-message-sent rounded-lg p-3 rounded-tr-none">
+                            <p class="text-sm">Yes, that's fine. How about you?</p>
+                        </div>
+                        <div class="flex justify-end items-center mt-1">
+                            <span class="text-xs text-gray-500 mr-1">09:15</span>
+                            <i class="fas fa-check-double text-blue-400 text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Received message with long text -->
+                <div class="flex mb-4">
+                    <div class="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center mr-2 flex-shrink-0">
+                        <span class="font-bold text-xs">M</span>
+                    </div>
+                    <div class="max-w-xs lg:max-w-md">
+                        <div class="bg-message-received rounded-lg p-3 rounded-tl-none">
+                            <p class="text-sm">I'm doing well. Just working on the project we discussed. Have you checked the documents I sent?</p>
+                        </div>
+                        <span class="text-xs text-gray-500 mt-1 block">09:20</span>
+                    </div>
+                </div>
+                
+                <!-- Sent message with emoji -->
+                <div class="flex justify-end mb-4">
+                    <div class="max-w-xs lg:max-w-md">
+                        <div class="bg-message-sent rounded-lg p-3 rounded-tr-none">
+                            <p class="text-sm">Not yet, but I'll check them today. Looking forward to it! 👍</p>
+                        </div>
+                        <div class="flex justify-end items-center mt-1">
+                            <span class="text-xs text-gray-500 mr-1">09:22</span>
+                            <i class="fas fa-check-double text-blue-400 text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Empty space for new messages -->
+                <div class="h-16"></div>
+            </div>
+            
+            <!-- Message input area -->
+            <div class="p-4 bg-input-area">
+                <div class="flex items-center">
+                    <button class="text-gray-400 hover:text-gray-200 p-3">
+                        <i class="far fa-grin"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-gray-200 p-3">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                    <div class="flex-1 mx-2">
+                        <input 
+                            type="text" 
+                            placeholder="Type a message" 
+                            class="w-full px-4 py-3 bg-gray-700 text-gray-200 rounded-full focus:outline-none focus:ring-1 focus:ring-whatsapp"
+                        >
+                    </div>
+                    <button class="bg-whatsapp text-white p-3 rounded-full hover:bg-green-600">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Add some interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            // Highlight active chat
+            const chatItems = document.querySelectorAll('.flex.items-center.p-3.hover\\:bg-gray-800');
+            chatItems[0].classList.add('bg-gray-800');
+            
+            // When clicking on a chat item, highlight it
+            chatItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    chatItems.forEach(chat => chat.classList.remove('bg-gray-800'));
+                    this.classList.add('bg-gray-800');
+                    
+                    // Update chat header with selected chat name
+                    const chatName = this.querySelector('.font-semibold').textContent;
+                    document.querySelector('.bg-chat-header .font-semibold').textContent = chatName;
+                    
+                    // Show a notification
+                    const inputField = document.querySelector('input[placeholder="Type a message"]');
+                    inputField.placeholder = `Message ${chatName}`;
+                });
+            });
+            
+            // Focus on message input when clicking in message area
+            const messageInput = document.querySelector('input[placeholder="Type a message"]');
+            const chatArea = document.querySelector('.whatsapp-pattern');
+            
+            chatArea.addEventListener('click', function() {
+                messageInput.focus();
+            });
+            
+            // Send message on Enter key
+            messageInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && this.value.trim() !== '') {
+                    e.preventDefault();
+                    
+                    // Create new message element
+                    const messageText = this.value;
+                    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    
+                    const messageContainer = document.querySelector('.whatsapp-pattern');
+                    
+                    const newMessage = document.createElement('div');
+                    newMessage.className = 'flex justify-end mb-4';
+                    newMessage.innerHTML = `
+                        <div class="max-w-xs lg:max-w-md">
+                            <div class="bg-message-sent rounded-lg p-3 rounded-tr-none">
+                                <p class="text-sm">${messageText}</p>
+                            </div>
+                            <div class="flex justify-end items-center mt-1">
+                                <span class="text-xs text-gray-500 mr-1">${time}</span>
+                                <i class="fas fa-check text-gray-400 text-xs"></i>
+                            </div>
+                        </div>
+                    `;
+                    
+                    messageContainer.appendChild(newMessage);
+                    this.value = '';
+                    
+                    // Scroll to bottom
+                    messageContainer.scrollTop = messageContainer.scrollHeight;
+                    
+                    // Simulate a reply after 1 second
+                    setTimeout(() => {
+                        const replyMessage = document.createElement('div');
+                        replyMessage.className = 'flex mb-4';
+                        replyMessage.innerHTML = `
+                            <div class="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center mr-2 flex-shrink-0">
+                                <span class="font-bold text-xs">M</span>
+                            </div>
+                            <div class="max-w-xs lg:max-w-md">
+                                <div class="bg-message-received rounded-lg p-3 rounded-tl-none">
+                                    <p class="text-sm">Thanks for your message. I'll reply soon.</p>
+                                </div>
+                                <span class="text-xs text-gray-500 mt-1 block">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                            </div>
+                        `;
+                        
+                        messageContainer.appendChild(replyMessage);
+                        messageContainer.scrollTop = messageContainer.scrollHeight;
+                    }, 1000);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

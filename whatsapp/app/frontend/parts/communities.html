@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Communities Interface - Tailwind CSS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {},
+      },
+    }
+  </script>
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="px-6 py-4">
+    <h1 class="text-2xl font-semibold">Communities</h1>
+  </header>
+
+  <!-- Featured Community -->
+  <section class="px-6 mb-6">
+    <div class="flex items-center space-x-4 bg-gray-800 rounded-2xl p-4">
+      <img src="https://via.placeholder.com/64" alt="L5 Sod Student" class="w-16 h-16 rounded-xl object-cover">
+      <div class="flex-1">
+        <p class="font-medium text-lg">L5 Sod Student</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Announcements Section -->
+  <section class="px-6">
+    <div class="space-y-4">
+      <div class="flex items-start space-x-4 bg-gray-800 rounded-2xl p-4">
+        <div class="relative flex-shrink-0">
+          <div class="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center">
+            <i class="fas fa-volume-up text-2xl text-gray-400 rotate-180"></i>
+          </div>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex justify-between items-start mb-1">
+            <h3 class="font-medium">Announcements</h3>
+            <span class="text-sm text-gray-400">19:17</span>
+          </div>
+          <p class="text-sm text-gray-400 truncate">
+            The group "L5 student" was remo...
+          </p>
+        </div>
+      </div>
+
+      <!-- View all link -->
+      <div class="text-center">
+        <button class="text-green-500 font-medium">
+          View all
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Extra space to mimic empty list below -->
+  <div class="flex-1"></div>
+
+</body>
+</html>

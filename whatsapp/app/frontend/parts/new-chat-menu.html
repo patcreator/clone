@@ -1,0 +1,73 @@
+<div id="users2-container" class="space-y-4 px-4 overflow-y-auto h-[3xl] pb-9 py-3"></div>
+<div id="contx250" class="h-full w-full absolute z-30 bg-gray-900">
+<div class="max-w-md mx-auto h-screen flex flex-col">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between px-4 py-4 border-b border-gray-800">
+      <div class="flex items-center gap-3">
+        <button onclick="killPart('#new-chat-menu')" class="text-gray-300 hover:text-white text-xl">
+          <i class="uil uil-arrow-left"></i>
+        </button>
+        <h1 class="text-lg font-semibold">New chat</h1>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="p-4">
+      <div class="relative">
+        <span class="absolute inset-y-0 left-4 flex items-center text-gray-400 text-lg">
+          <i class="uil uil-search"></i>
+        </span>
+        <input
+          type="text"
+          placeholder="Search name or number"
+          class="w-full pl-12 pr-4 py-3 rounded-full bg-gray-800 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="px-4 space-y-5">
+
+      <!-- New Group -->
+      <div onclick="getPart('users','#users2-container');$('#contx250').hide()" class="flex items-center gap-4 cursor-pointer">
+        <div class="w-11 h-11 flex items-center justify-center rounded-full bg-gray-700 text-xl">
+          <i class="uil uil-users-alt"></i>
+        </div>
+        <span class="font-medium">New group</span>
+      </div>
+
+    </div>
+    <div id="users-container" class="space-y-4 px-4 overflow-y-auto h-[3xl] pb-9 py-3"></div>
+</div>
+</div>
+<script>
+  $.post("@api/api", {
+    action:'get-users'
+  }, function(res){
+      let $dt = $("#users-container");
+      let ___ = '';
+      // alert(JSON.stringify(res));
+      $(res.data).each(function () {
+        ___+=`
+            <!-- Contact -->
+             <div onclick="window.location.href = './?r=${this.id}&s=${res.id}'" class="flex items-center gap-4 dark:hover:bg-gray-800 hover:bg-gray-200 rounded-3xl p-2 cursor-pointer">
+               <img
+                 src="${this.image || 'app/system/filemanager/images/avatars/default.png'}"
+                 class="w-12 h-12 rounded-full"
+                 alt="profile"
+               />
+               <div>
+                 <p class="font-medium">${this.username.toUpperCase()}</p>
+                 <p class="text-sm text-gray-400">
+                   <i class="uil uil-briefcase mr-1"></i>
+                   ${this.email}
+                 </p>
+               </div>
+             </div>`;
+      });
+      $dt.html(___);
+  }).fail(function (xhr) {
+      alert(JSON.stringify(xhr));
+  });
+</script>

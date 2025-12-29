@@ -1,0 +1,30 @@
+DirectoryIndex pdt.php
+Options -Indexes
+RewriteEngine On
+RewriteRule ^login[/]?$  app/auth/login.php
+RewriteRule ^signup[/]?$  app/auth/signup.html
+RewriteRule ^forgot-password[/]?$  app/auth/forgot-password.html
+RewriteRule ^logout[/]?$ includes.php?page=$0 [L,NC,QSA]
+RewriteRule ^search_suggestions$ app/system/api/get_search.php?q=$0 [L,NC,QSA]
+RewriteRule ^@api/(.+)$ app/api/$1.php [L,NC,QSA]
+RewriteRule ^(@)?cog/(.+)$ includes.php?page=$0 [L,NC,QSA]
+RewriteRule ^@auth/(.+)$ app/auth/$1.php [L,NC,QSA]
+RewriteRule ^@home$ pdt.php [L,NC,QSA]
+RewriteRule ^(\@)?users(/)?(.+)?$ includes.php?page=users [L,NC,QSA]
+RewriteRule ^(Dashboard|Search|Create|Content|Analytics|History|Profile|Settings|Explore|Report|Help|feedback|editor|query|filemanager|cmd)$ includes.php?page=s/$0 [L,NC,QSA]
+
+RewriteRule ^s/(.*)[/]?$ includes.php?page=$0 [L,NC,QSA]
+RewriteRule ^@support/(.*)[/]?$ includes.php?page=$0 [L,NC,QSA]
+RewriteRule ^content/(.+)$ includes.php?page=$0&e=$1 [L,NC,QSA]
+
+# Remove .php extension from URLs
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^([^/]+)/?$ $1.php [L]
+
+# Redirect to HTTPS (optional)
+#RewriteCond %{HTTPS} off
+#RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+ErrorDocument 403 /clone/whatsapp/app/system/errors/403.html
+ErrorDocument 404 /clone/whatsapp/app/system/errors/404.html

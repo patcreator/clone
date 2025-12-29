@@ -1,0 +1,125 @@
+<form id="createGroupForm" enctype="multipart/form-data">
+
+<div class="max-w-md mx-auto h-screen dark:text-gray-100 text-gray-900 flex flex-col relative">
+
+  <!-- Header -->
+  <div class="flex items-center gap-4 px-4 py-4">
+    <button onclick="$('#step-1').hide();$('#step-2').show();" type="button" class="text-gray-900 dark:text-gray-100 text-xl">
+      ←
+    </button>
+    <h1 class="text-lg font-semibold">New group</h1>
+  </div>
+
+  <!-- Content -->
+  <div class="flex-1 px-6 flex flex-col items-center">
+
+    <!-- Group Icon -->
+    <div class="relative mt-6 mb-8 cursor-pointer" id="groupIconBtn">
+      <div class="w-20 h-20 rounded-full bg-gray-300 overflow-hidden flex items-center justify-center">
+        <img id="groupIconPreview" class="hidden w-full h-full object-cover" />
+        <div id="groupIconPlaceholder" class="text-center opacity-80">
+          <i class="text-xl text-gray-900 mb-1 fa fa-image"></i>
+          <p class="text-xs text-gray-900">Add group<br>icon</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden File Input -->
+    <input
+      type="file"
+      id="groupIconInput"
+      name="group_icon"
+      accept="image/*"
+      class="hidden"
+    />
+
+    <!-- Group Name -->
+    <div class="w-full mt-2">
+      <input
+        id="group-name"
+        name="group_name"
+        type="text"
+        placeholder="Group name (optional)"
+        class="w-full bg-transparent border-0 border-b-2 border-green-500 focus:outline-none focus:ring-0 text-gray-900 dark:text-gray-100 placeholder-gray-500 py-2"
+      />
+    </div>
+
+    <!-- Submit -->
+    <div class="flex justify-center mt-8">
+      <button
+        type="submit"
+        id="submitGroup"
+        class="w-14 h-14 rounded-full bg-white text-black flex items-center justify-center text-2xl shadow-lg">
+        ✓
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+</form>
+<script>
+/* Click avatar → open file picker */
+$("#groupIconBtn").on("click", function () {
+  $("#groupIconInput").click();
+});
+
+/* Preview image */
+$("#groupIconInput").on("change", function (e) {
+  const file = e.target.files[0];
+
+  if (!file || !file.type.startsWith("image/")) {
+    alert("Please select a valid image");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    $("#groupIconPreview")
+      .attr("src", e.target.result)
+      .removeClass("hidden");
+
+    $("#groupIconPlaceholder").addClass("hidden");
+  };
+
+  reader.readAsDataURL(file);
+});
+</script>
+<script>
+$("#createGroupForm").on("submit", function (e) {
+  e.preventDefault();
+
+  const formData = new FormData(this);
+
+  // Add action
+  formData.append("action", "create-group");
+
+  // Add user IDs
+  Object.keys(selectedUsers).forEach(id => {
+    formData.append("user_ids[]", id);
+  });
+
+  $.ajax({
+    url: "@api/api",
+    method: "POST",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (res) {
+      console.log(res);
+
+      if (res.success) {
+        alert("Group created successfully");
+        // redirect or reset UI
+      } else {
+        alert(res.message || "Failed to create group");
+      }
+    },
+    error: function (err) {
+      console.error(err);
+      alert("Server error");
+    }
+  });
+});
+</script>

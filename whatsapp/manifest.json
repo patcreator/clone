@@ -1,0 +1,27 @@
+{
+  "name": "clone/whatsapp",
+  "short_name": "clone/whatsapp",
+  "description": "This proect is all about  content managment system",
+  "start_url": "/clone/whatsapp/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/clone/whatsapp/app/system/filemanager/favicons/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/clone/whatsapp/app/system/filemanager/favicons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/clone/whatsapp/app/system/filemanager/favicons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

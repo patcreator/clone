@@ -1,0 +1,372 @@
+<div class="mx-auto bg-white dark:bg-gray-900 rounded-lg shadow">
+    <!-- Header -->
+  <div class="flex items-center gap-4 px-4 py-4">
+    <button onclick="backToPart()" type="button" class="text-gray-900 dark:text-gray-100 text-xl">
+      ←
+    </button>
+    <h1 class="text-lg font-semibold">Profile</h1>
+  </div>
+  <!-- Banner Section -->
+  <div class="relative">
+    <label class="cursor-pointer block">
+      <input type="file" id="banner-upload" class="hidden" accept="image/*">
+      <img id="banner-img" src="https://thumbs.dreamstime.com/b/abstract-design-bright-green-electrical-spark-lightning-dynamic-energy-effect-deep-background-modern-electric-backdrop-351811238.jpg" alt="Banner" class="w-full h-32 object-cover">
+      <div class="absolute inset-0 bg-black/30 hover:bg-black/50 transition flex items-end justify-end p-4 opacity-0 hover:opacity-100">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+      </div>
+    </label>
+
+  </div>
+
+  <!-- Profile Picture (centered over banner) -->
+  <div class="relative -mt-20 flex justify-center">
+    <label class="cursor-pointer block relative group">
+      <input type="file" id="profile-upload" class="hidden" accept="image/*">
+      <img id="profile-img" src="https://www.shutterstock.com/image-photo/portrait-shot-confident-male-african-600nw-2492802027.jpg" alt="Profile" class="w-32 h-32 rounded-full border-4 border-black object-cover">
+      <div class="absolute inset-0 rounded-full bg-black/40 group-hover:bg-black/60 transition flex items-center justify-center opacity-0 group-hover:opacity-100">
+        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+      </div>
+    </label>
+  </div>
+
+  <!-- Content Section -->
+  <div class="max-w-2xl mx-auto px-4 pb-20">
+    <!-- Name & Description -->
+    <div class="flex items-start gap-4 mb-8 group cursor-pointer" data-modal-target="edit-modal" data-modal-toggle="edit-modal" data-field="description">
+      <svg class="w-6 h-6 text-gray-400 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-2m-8 0h6"/></svg>
+      <div class="flex-1">
+        <h2 id="desc-title" class="text-2xl font-semibold">Patcreator website</h2>
+        <p id="desc-text" class="text-lg">development</p>
+      </div>
+      <svg class="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+    </div>
+
+    <!-- Phone -->
+    <div class="flex items-start gap-4 mb-8 group cursor-pointer" data-modal-target="edit-modal" data-modal-toggle="edit-modal" data-field="phone">
+      <svg class="w-6 h-6 text-gray-400 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+      <div class="flex-1">
+        <p id="phone-number" class="text-xl">+250 783 999 980</p>
+        <p class="text-gray-400 text-sm mt-2">Name and phone number will be visible to your WhatsApp customers and can be edited from the app on your mobile device.</p>
+      </div>
+      <svg class="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+    </div>
+
+    <!-- Category -->
+    <div class="flex items-center gap-4 mb-8 group cursor-pointer" data-modal-target="edit-modal" data-modal-toggle="edit-modal" data-field="category">
+      <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10h6m-6 0H3"/></svg>
+      <p id="category-text" class="text-xl">Computers & Internet Website</p>
+      <svg class="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 transition ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+    </div>
+
+    <!-- Location -->
+    <div class="flex items-center gap-4 group cursor-pointer" data-modal-target="edit-modal" data-modal-toggle="edit-modal" data-field="location">
+      <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      <p id="location-text" class="text-xl">23CG+JJR, Kigali, Rwanda</p>
+      <svg class="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 transition ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+    </div>
+  </div>
+<div class="p-6">
+      <!-- Map Preview -->
+    <div class="mt-8 mb-8">
+      <label class="cursor-pointer block relative group rounded-lg overflow-hidden">
+        <input type="file" id="map-upload" class="hidden" accept="image/*">
+        <img id="map-img" src="https://thumbs.dreamstime.com/z/high-tech-stylized-map-dark-theme-showing-detailed-city-streets-neighborhoods-glowing-red-route-location-pin-342286548.jpg" alt="Location Map" class="w-full h-48 object-cover rounded-lg">
+        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition flex items-center justify-center opacity-0 group-hover:opacity-100">
+          <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+        </div>
+      </label>
+    </div>
+
+    <!-- Email -->
+    <div class="flex items-center gap-4 mb-8 group cursor-pointer" data-modal-target="edit-modal" data-modal-toggle="edit-modal" data-field="email">
+      <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
+      <p id="email-text" class="text-xl">ppatcreator@gmail.com</p>
+      <svg class="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 transition ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+    </div>
+
+    <!-- Website -->
+    <div class="flex items-center gap-4 mb-8 group cursor-pointer" data-modal-target="edit-modal" data-modal-toggle="edit-modal" data-field="website">
+      <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+      <p id="website-text" class="text-xl">https://patcreator.com</p>
+      <svg class="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 transition ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+    </div>
+
+    <!-- Add Another Website -->
+    <div class="mb-8">
+      <button class="text-green-500 font-medium flex items-center gap-2 hover:text-green-400">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        ADD ANOTHER WEBSITE
+      </button>
+    </div>
+
+    <!-- Business Hours -->
+    <div class="space-y-4">
+      <div class="flex items-center justify-between group cursor-pointer" data-modal-target="edit-modal" data-modal-toggle="edit-modal" data-field="hours-sunday">
+        <div class="flex items-center gap-4">
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span class="text-lg">Sunday</span>
+          <span id="hours-sunday" class="text-lg text-gray-300">09:00 - 18:00</span>
+        </div>
+        <svg class="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+      </div>
+
+      <div class="flex items-center justify-between group cursor-pointer" data-modal-target="edit-modal" data-modal-toggle="edit-modal" data-field="hours-sunday">
+        <div class="flex items-center gap-4">
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span class="text-lg">Sunday</span>
+          <span id="hours-sunday" class="text-lg text-gray-300">09:00 - 18:00</span>
+        </div>
+        <svg class="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+      </div>
+
+      <div class="flex items-center justify-between group cursor-pointer" data-modal-target="edit-modal" data-modal-toggle="edit-modal" data-field="hours-sunday">
+        <div class="flex items-center gap-4">
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span class="text-lg">Sunday</span>
+          <span id="hours-sunday" class="text-lg text-gray-300">09:00 - 18:00</span>
+        </div>
+        <svg class="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+      </div>
+
+      <div class="flex items-center justify-between group cursor-pointer" data-modal-target="edit-modal" data-modal-toggle="edit-modal" data-field="hours-sunday">
+        <div class="flex items-center gap-4">
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span class="text-lg">Sunday</span>
+          <span id="hours-sunday" class="text-lg text-gray-300">09:00 - 18:00</span>
+        </div>
+        <svg class="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+      </div>
+
+      <div class="flex items-center justify-between group cursor-pointer" data-modal-target="edit-modal" data-modal-toggle="edit-modal" data-field="hours-sunday">
+        <div class="flex items-center gap-4">
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span class="text-lg">Sunday</span>
+          <span id="hours-sunday" class="text-lg text-gray-300">09:00 - 18:00</span>
+        </div>
+        <svg class="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+      </div>
+
+      <div class="flex items-center justify-between group cursor-pointer" data-modal-target="edit-modal" data-modal-toggle="edit-modal" data-field="hours-sunday">
+        <div class="flex items-center gap-4">
+          <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span class="text-lg">Sunday</span>
+          <span id="hours-sunday" class="text-lg text-gray-300">09:00 - 18:00</span>
+        </div>
+        <svg class="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+      </div>
+
+    </div>
+    <!-- Catalog Description (Top editable text) -->
+    <div class="mt-12 mb-8 group cursor-pointer relative" data-modal-target="edit-modal" data-modal-toggle="edit-modal" data-field="catalog-description">
+      <p id="catalog-desc" class="text-xl leading-relaxed text-gray-200">
+        Transform Your Online Presence with Our Top-Notch Web Development and UX Design Services! 💪🟢
+      </p>
+      <svg class="absolute top-0 right-0 w-6 h-6 text-gray-400 opacity-0 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+      </svg>
+    </div>
+
+    <!-- Products Section -->
+    <div class="mt-12">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl font-semibold">Products</h3>
+        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </div>
+
+      <!-- Product Grid -->
+      <div class="grid grid-cols-3 gap-4 mb-8">
+        <!-- Product 1: Logo -->
+        <div class="relative group">
+          <img src="https://via.placeholder.com/300x300/064e3b/ffffff?text=PATCREATOR+LOGO" alt="Patcreator Logo" class="w-full aspect-square object-contain rounded-lg bg-gray-900 p-4">
+          <div class="absolute inset-0 rounded-lg bg-black/40 group-hover:bg-black/60 transition flex items-center justify-center opacity-0 group-hover:opacity-100">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+            </svg>
+          </div>
+          <p class="text-center mt-2 text-sm text-gray-300">PATCREATOR — FULLSTACK DEV</p>
+        </div>
+
+        <!-- Product 2: Workspace Photo -->
+        <label class="relative group cursor-pointer block">
+          <input type="file" class="hidden" accept="image/*" onchange="updateProductImage(this, 'product2-img')">
+          <img id="product2-img" src="https://images.unsplash.com/photo-1558655146-9f40138ed1cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Developer workspace" class="w-full aspect-square object-cover rounded-lg">
+          <div class="absolute inset-0 rounded-lg bg-black/40 group-hover:bg-black/60 transition flex items-center justify-center opacity-0 group-hover:opacity-100">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+            </svg>
+          </div>
+        </label>
+
+        <!-- Add Product Card -->
+        <div class="flex items-center justify-center aspect-square rounded-lg border-2 border-dashed border-gray-600 bg-gray-900/50">
+          <svg class="w-12 h-12 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- View or edit catalog button -->
+      <button class="w-full py-3 bg-green-600 hover:bg-green-700 rounded-full font-medium text-lg transition">
+        View or edit catalog
+      </button>
+    </div>
+
+    <!-- About / Status -->
+    <div class="mt-12">
+      <h3 class="text-2xl font-semibold mb-6">About</h3>
+      <div class="flex items-center gap-4 group cursor-pointer" data-modal-target="edit-modal" data-modal-toggle="edit-modal" data-field="status">
+        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <p id="status-text" class="text-xl">Available</p>
+        <svg class="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 transition ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+        </svg>
+      </div>
+    </div>
+</div>
+</div>
+<!-- Edit Modal (Flowbite) -->
+  <div id="edit-modal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+    <div class="relative p-4 w-full max-w-md">
+      <div class="relative bg-gray-900 rounded-lg shadow">
+        <div class="flex items-center justify-between p-4 border-b border-gray-700">
+          <h3 class="text-xl font-semibold text-white" id="modal-title">Edit Field</h3>
+          <button type="button" class="text-gray-400 hover:text-white" data-modal-hide="edit-modal">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="p-6">
+          <input type="text" id="modal-input" class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white">
+        </div>
+        <div class="flex justify-end p-4 gap-4 border-t border-gray-700">
+          <button data-modal-hide="edit-modal" type="button" class="px-4 py-2 text-gray-400 hover:text-white">Cancel</button>
+          <button id="save-edit" type="button" class="px-6 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-white">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+  // === Image Upload Previews ===
+  document.getElementById('banner-upload').addEventListener('change', function(e) {
+    if (e.target.files[0]) {
+      document.getElementById('banner-img').src = URL.createObjectURL(e.target.files[0]);
+    }
+  });
+
+  document.getElementById('profile-upload').addEventListener('change', function(e) {
+    if (e.target.files[0]) {
+      document.getElementById('profile-img').src = URL.createObjectURL(e.target.files[0]);
+    }
+  });
+
+  document.getElementById('map-upload').addEventListener('change', function(e) {
+    if (e.target.files[0]) {
+      document.getElementById('map-img').src = URL.createObjectURL(e.target.files[0]);
+    }
+  });
+
+  // Helper for dynamic product images (you can add more as needed)
+  function updateProductImage(input, imgId) {
+    if (input.files && input.files[0]) {
+      document.getElementById(imgId).src = URL.createObjectURL(input.files[0]);
+    }
+  }
+
+  // === Modal Editing Logic ===
+  let currentField = null;
+
+  // Open modal and prepare content
+  document.querySelectorAll('[data-modal-toggle="edit-modal"]').forEach(el => {
+    el.addEventListener('click', function() {
+      currentField = this.getAttribute('data-field');
+
+      let text = '';
+      let modalTitle = 'Edit Field';
+
+      if (currentField === 'description') {
+        modalTitle = 'Edit Name & Description';
+        text = document.getElementById('desc-title').textContent + '\n' + 
+               (document.getElementById('desc-text').textContent || '');
+      } 
+      else if (currentField === 'phone') {
+        modalTitle = 'Edit Phone Number';
+        text = document.getElementById('phone-number').textContent;
+      } 
+      else if (currentField === 'category') {
+        modalTitle = 'Edit Category';
+        text = document.getElementById('category-text').textContent;
+      } 
+      else if (currentField === 'location') {
+        modalTitle = 'Edit Location';
+        text = document.getElementById('location-text').textContent;
+      } 
+      else if (currentField === 'email') {
+        modalTitle = 'Edit Email';
+        text = document.getElementById('email-text').textContent;
+      } 
+      else if (currentField === 'website') {
+        modalTitle = 'Edit Website';
+        text = document.getElementById('website-text').textContent;
+      } 
+      else if (currentField === 'catalog-description') {
+        modalTitle = 'Edit Catalog Description';
+        text = document.getElementById('catalog-desc').textContent;
+      } 
+      else if (currentField === 'status') {
+        modalTitle = 'Edit Status';
+        text = document.getElementById('status-text').textContent;
+      } 
+      else if (currentField.startsWith('hours-')) {
+        const day = currentField.split('-')[1];
+        modalTitle = 'Edit ' + day.charAt(0).toUpperCase() + day.slice(1) + ' Hours';
+        text = document.getElementById('hours-' + day).textContent;
+      }
+
+      document.getElementById('modal-title').textContent = modalTitle;
+      document.getElementById('modal-input').value = text.trim();
+    });
+  });
+
+  // Save changes from modal
+  document.getElementById('save-edit').addEventListener('click', function() {
+    const newValue = document.getElementById('modal-input').value.trim();
+
+    if (currentField === 'description') {
+      const lines = newValue.split('\n');
+      document.getElementById('desc-title').textContent = lines[0] || 'Patcreator website';
+      document.getElementById('desc-text').textContent = lines[1] || 'development';
+    } 
+    else if (currentField === 'phone') {
+      document.getElementById('phone-number').textContent = newValue || '+250 783 999 980';
+    } 
+    else if (currentField === 'category') {
+      document.getElementById('category-text').textContent = newValue || 'Computers & Internet Website';
+    } 
+    else if (currentField === 'location') {
+      document.getElementById('location-text').textContent = newValue || '23CG+JJR, Kigali, Rwanda';
+    } 
+    else if (currentField === 'email') {
+      document.getElementById('email-text').textContent = newValue || 'ppatcreator@gmail.com';
+    } 
+    else if (currentField === 'website') {
+      document.getElementById('website-text').textContent = newValue || 'https://patcreator.com';
+    } 
+    else if (currentField === 'catalog-description') {
+      document.getElementById('catalog-desc').textContent = 
+        newValue || 'Transform Your Online Presence with Our Top-Notch Web Development and UX Design Services! 💪🟢';
+    } 
+    else if (currentField === 'status') {
+      document.getElementById('status-text').textContent = newValue || 'Available';
+    } 
+    else if (currentField.startsWith('hours-')) {
+      const day = currentField.split('-')[1];
+      document.getElementById('hours-' + day).textContent = newValue || '09:00 - 18:00';
+    }
+
+    // Close modal (Flowbite way)
+    document.querySelector('[data-modal-hide="edit-modal"]').click();
+  });
+</script>

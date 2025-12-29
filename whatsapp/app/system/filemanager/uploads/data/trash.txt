@@ -1,0 +1,16 @@
+            <!-- WhatsApp for Windows info -->
+            <div class="p-4 border-t border-gray-800 bg-gray-800">
+                <div class="flex items-start">
+                    <div class="bg-whatsapp p-2 rounded-lg">
+                        <i class="fab fa-whatsapp text-white text-xl"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="font-semibold">WhatsApp for Windows</h3>
+                        <p class="text-sm text-gray-400 mt-1">Grow, organise and manage your business account.</p>
+                        <p class="text-xs text-gray-500 mt-2">
+                            <i class="fas fa-lock text-gray-500 mr-1"></i>
+                            Your personal messages are end-to-end encrypted
+                        </p>
+                    </div>
+                </div>
+            </div>

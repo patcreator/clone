@@ -1,0 +1,199 @@
+
+  <div id="step-2"></div>
+  <div  id="step-1" class="max-w-md mx-auto h-screen flex flex-col">
+
+    <!-- Header -->
+    <div class="flex items-center gap-4 px-4 py-4 border-b border-gray-700">
+      <button class="dark:text-white bg-gray-200 dark:bg-gray-800 py-1 rounded-full px-2">
+        ←
+      </button>
+      <h1 class="text-lg font-semibold">Add group members</h1>
+    </div>
+
+    <!-- Search -->
+    <div class="px-4 py-3">
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="Search name or number"
+        class="w-full bg-transparent border-b border-gray-600 focus:border-indigo-500 focus:outline-none text-sm placeholder-gray-400"
+      />
+    </div>
+<!-- Selected users -->
+<div id="selectedUsersWrapper" class="px-4 py-2 hidden">
+  <div id="selectedUsers" class="flex flex-wrap gap-2"></div>
+</div>
+
+<!-- Next button -->
+<div id="nextBtnWrapper" class="px-4 py-3 hidden">
+  <button
+    id="nextBtn"
+    class="w-full bg-gray-200 text-gray-800 py-2 rounded-lg font-medium">
+    Next
+  </button>
+</div>
+
+
+    <!-- Contact List -->
+   <div id="contactList" class="flex-1 overflow-y-auto px-2"></div>
+   <div class="p-9 my-9"></div>
+ </div>
+<script>
+let originalData = {};
+
+$.post("@api/api", {
+  action: 'get-grouped-users'
+}, function (res) {
+
+  if (!res.success) return;
+
+  originalData = res.data;
+  renderContacts(originalData);
+
+}).fail(function (xhr) {
+  console.log(xhr);
+});
+
+/* Render contacts */
+function renderContacts(data) {
+  let html = '';
+
+  $.each(data, function (letter, users) {
+
+    // Letter header
+    html += `<p class="px-3 py-2 text-sm text-gray-400">${letter}</p>`;
+
+    // Users under letter
+    users.forEach(user => {
+     html += `
+  <div 
+    class="contact-item flex items-center gap-3 px-3 py-2 dark:hover:bg-gray-800 hover:bg-gray-200 rounded-lg cursor-pointer"
+    data-id="${user.id}"
+    data-name="${user.username}">
+    
+    <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
+      👤
+    </div>
+
+    <div>
+      <p class="font-medium">${user.username}</p>
+      <p class="text-sm text-gray-400">${user.email}</p>
+    </div>
+  </div>
+`;
+    });
+
+  });
+
+  $("#contactList").html(html);
+}
+
+</script>
+
+<script>
+let selectedUsers = {}; // {id: name}
+
+/* Click contact */
+$(document).on("click", ".contact-item", function () {
+
+  const userId = $(this).data("id");
+  const userName = $(this).data("name");
+
+  if ($(this).hasClass("__added")) {
+    // REMOVE
+    $(this)
+      .removeClass("__added bg-indigo-200");
+
+    delete selectedUsers[userId];
+    removeSelectedChip(userId);
+
+  } else {
+    // ADD
+    $(this)
+      .addClass("__added bg-indigo-200");
+
+    selectedUsers[userId] = userName;
+    addSelectedChip(userId, userName);
+  }
+
+  toggleNextButton();
+});
+
+/* Add chip */
+function addSelectedChip(id, name) {
+  $("#selectedUsersWrapper").removeClass("hidden");
+
+  $("#selectedUsers").append(`
+    <span 
+      class="selected-chip bg-indigo-500 text-white px-3 py-1 rounded-full text-sm"
+      data-id="${id}">
+      ${name}
+    </span>
+  `);
+}
+
+/* Remove chip */
+function removeSelectedChip(id) {
+  $(`.selected-chip[data-id="${id}"]`).remove();
+
+  if (Object.keys(selectedUsers).length === 0) {
+    $("#selectedUsersWrapper").addClass("hidden");
+  }
+}
+
+/* Show / Hide Next button */
+function toggleNextButton() {
+  if (Object.keys(selectedUsers).length > 0) {
+    $("#nextBtnWrapper").removeClass("hidden");
+  } else {
+    $("#nextBtnWrapper").addClass("hidden");
+  }
+}
+</script>
+
+
+
+<script>
+$("#nextBtn").on("click", function () {
+  const userIds = Object.keys(selectedUsers); // [1,4,7,9]
+
+  console.log("Selected user IDs:", userIds);
+  getPart('create-group/add-group-name-icon','#step-2');
+  $("#step-1").hide();
+  // Example submit
+  /*
+  $.post("@api/api", {
+    action: 'create-group',
+    users: userIds
+  });
+  */
+});
+</script>
+
+<script>
+$("#searchInput").on("keyup", function () {
+  const keyword = $(this).val().toLowerCase();
+
+  if (keyword === '') {
+    renderContacts(originalData);
+    return;
+  }
+
+  let filtered = {};
+
+  $.each(originalData, function (letter, users) {
+
+    let matchedUsers = users.filter(user =>
+      user.username.toLowerCase().includes(keyword) ||
+      user.email.toLowerCase().includes(keyword) ||
+      user.phone.toLowerCase().includes(keyword)
+    );
+
+    if (matchedUsers.length > 0) {
+      filtered[letter] = matchedUsers;
+    }
+  });
+
+  renderContacts(filtered);
+});
+</script>

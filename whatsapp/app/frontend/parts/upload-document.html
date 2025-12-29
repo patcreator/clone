@@ -1,0 +1,92 @@
+    <!-- Main modal -->
+    <div id="upload-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full ">
+        <div class="relative p-4 w-full max-w-2xl max-h-full ">
+            <!-- Modal content -->
+            <div class="relative bg-neutral-primary-soft dark:bg-gray-800 bg-white border border-gray-300 dark:border-gray-700 rounded-base shadow-sm p-4 md:p-6">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between border-b border-gray-300 dark:border-gray-700 pb-4 md:pb-5">
+                    <h3 class="text-lg font-medium text-heading">
+                        Upload document
+                    </h3>
+                    <button type="button" class="text-body bg-transparent hover:bg-neutral-tertiary hover:text-heading rounded-base text-sm w-9 h-9 ms-auto inline-flex justify-center items-center" data-modal-hide="upload-modal">
+                        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/></svg>
+                        <span class="sr-only">Close</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="space-y-4 md:space-y-6 py-4 md:py-6">
+
+                        <!-- Dropzone -->
+                        <form 
+                          id="document-dropzone" 
+                          class="dropzone flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-base p-6  bg-transparent cursor-pointer bg-white dark:bg-gray-800"
+                        >
+                          <div class="dz-message text-center space-y-2">
+                            <svg class="w-10 h-10 text-purple-400 mx-auto" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                              <path d="M7 16V4a1 1 0 011-1h8a1 1 0 011 1v12"/>
+                              <path d="M5 20h14a1 1 0 001-1v-1H4v1a1 1 0 001 1z"/>
+                            </svg>
+                            <p class="text-heading font-medium">Drop file here</p>
+                            <p class="text-sm text-body">or click to browse</p>
+                          </div>
+                        </form>
+
+                        <div id="upload-status" class="mt-4 text-sm hidden"></div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    Dropzone.autoDiscover = false;
+
+const uploadZone = new Dropzone("#document-dropzone", {
+    url: "@api/api",
+    paramName: "file",
+    maxFilesize: 50,
+    maxFiles: 1,
+    addRemoveLinks: true,
+    timeout: 60000,
+
+    init: function () {
+
+        this.on("sending", function (file, xhr, formData) {
+
+            // ✅ ALWAYS read latest values
+            formData.append("action", "upload-file");
+            formData.append("sender", $("#sender").val());
+            formData.append("receiver", $("#receiver").val());
+            formData.append("is_group", $("input[name='is_group']").val());
+
+            $("#upload-status")
+                .removeClass("hidden text-red-500")
+                .addClass("text-body")
+                .text("Uploading file...");
+        });
+
+        this.on("success", function (file, response) {
+            if (response.success) {
+                $("#upload-status")
+                    .removeClass("text-red-500")
+                    .addClass("text-green-600")
+                    .text(response.message);
+
+                setTimeout(()=> window.location.reload() , 1000);
+            } else {
+                $("#upload-status")
+                    .removeClass("text-green-600")
+                    .addClass("text-red-500")
+                    .text(response.message);
+            }
+        });
+
+        this.on("error", function () {
+            $("#upload-status")
+                .removeClass("text-green-600")
+                .addClass("text-red-500")
+                .text("Upload error");
+        });
+    }
+});
+</script>

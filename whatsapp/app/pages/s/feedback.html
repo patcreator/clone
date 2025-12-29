@@ -1,0 +1,103 @@
+    <?php
+
+$structureFile = 'app/system/api/structure.json';
+
+if (!file_exists($structureFile)) {
+    die("Structure file not found");
+}
+
+// Load structure data (JSON or XML)
+$ext = pathinfo($structureFile, PATHINFO_EXTENSION);
+if ($ext === 'json') {
+    $tables = json_decode(file_get_contents($structureFile), true);
+} elseif ($ext === 'xml') {
+    $xml = simplexml_load_file($structureFile);
+    $tables = json_decode(json_encode($xml), true);
+} else {
+    die("Unsupported file format");
+}
+
+// Pre-fetch record counts for each table
+$tableCounts = [];
+foreach ($tables as $tableName => $tableData) {
+    try {
+        $stmt = $pdo->query("SELECT COUNT(1) FROM `$tableName`");
+        $tableCounts[$tableName] = (int) $stmt->fetchColumn();
+    } catch (Exception $e) {
+        $tableCounts[$tableName] = null;
+    }
+}
+?>
+
+<style>
+  .card-gradient {
+    /*background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
+
+  }
+  .summary-hover {
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  .summary-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+  .card-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  }
+  .card.active .card-content {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .z-index{
+    z-index:100000000000000000000000 !important;
+  }
+</style>
+
+<section class=" py-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+  <h1 class="text-2xl font-bold mb-3">Feedbacks</h1>
+  <?php include_once "app/crud/fetch/feedback.php"; ?>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const cards = document.querySelectorAll(".card");
+
+  cards.forEach(card => {
+    const header = card.querySelector(".card-header");
+
+    header.addEventListener("click", e => {
+      e.stopPropagation();
+      const isActive = card.classList.contains("active");
+      cards.forEach(c => c.classList.remove("active","z-index"));
+      if (!isActive) card.classList.add("active","z-index");
+    });
+
+    card.addEventListener("keydown", e => {
+      if (["Enter", " "].includes(e.key)) {
+        e.preventDefault();
+        card.classList.toggle("active");
+      }
+    });
+  });
+
+  document.addEventListener("click", e => {
+    if (!e.target.closest(".card")) cards.forEach(c => c.classList.remove("active"));
+  });
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") cards.forEach(c => c.classList.remove("active"));
+  });
+});
+</script>
+</section>

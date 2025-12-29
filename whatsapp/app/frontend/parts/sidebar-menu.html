@@ -1,0 +1,77 @@
+<ul class="py-2 text-sm text-gray-700 dark:text-gray-200" onclick="$('#chatsDropdown').toggle()">
+    <li>
+        <button onclick="getPart('business-tools/home');" class="flex items-center px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition w-full">
+            <i class="fas fa-briefcase w-5 mr-3 text-gray-500 dark:text-gray-400"></i>
+            Business tools
+        </button>
+    </li>
+
+    <li onclick="getPart('users');">
+        <button  class="flex items-center px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition w-full ">
+            <i class="fas fa-users w-5 mr-3 text-gray-500 dark:text-gray-400"></i>
+            New group
+        </button>
+    </li>
+
+    <li>
+        <button  class="flex items-center w-full px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition w-full ">
+            <i class="fab fa-facebook w-5 mr-3 text-gray-500 dark:text-gray-400"></i>
+            Advertise with Facebook
+        </button>
+    </li>
+
+    <li onclick="getPart('business-tools/catalog');">
+        <button  class="flex items-center px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition w-full ">
+            <i class="fas fa-th w-5 mr-3 text-gray-500 dark:text-gray-400"></i>
+            Catalog
+        </button>
+    </li>
+
+    <li onclick="getPart('archived');">
+        <button  class="flex items-center px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition w-full ">
+            <i class="fas fa-archive w-5 mr-3 text-gray-500 dark:text-gray-400"></i>
+            Archived
+        </button>
+    </li>
+
+    <li onclick="getPart('business-tools/quick-replies');">
+        <button  class="flex items-center px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition w-full ">
+            <i class="fas fa-bolt w-5 mr-3 text-gray-500 dark:text-gray-400"></i>
+            Quick replies
+        </button>
+    </li>
+
+    <li onclick="getPart('business-tools/starred-messages');">
+        <button  class="flex items-center px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition w-full ">
+            <i class="fas fa-star w-5 mr-3 text-gray-500 dark:text-gray-400"></i>
+            Starred messages
+        </button>
+    </li>
+
+    <li onclick="getPart('business-tools/labels');">
+        <button  class="flex items-center px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition w-full ">
+            <i class="fas fa-tag w-5 mr-3 text-gray-500 dark:text-gray-400"></i>
+            Labels
+        </button>
+    </li>
+
+    <!-- Divider -->
+    <li>
+        <div class="my-2 border-t border-gray-200 dark:border-gray-700"></div>
+    </li>
+
+    <li>
+        <button  class="flex items-center px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition w-full ">
+            <i class="fas fa-lock w-5 mr-3 text-gray-500 dark:text-gray-400"></i>
+            App lock
+        </button>
+    </li>
+
+    <li>
+        <a href="/clone/whatsapp/logout"
+           class="flex items-center px-4 py-2 rounded-md text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition w-full ">
+            <i class="fas fa-sign-out-alt w-5 mr-3"></i>
+            Logout
+        </a>
+    </li>
+</ul>
