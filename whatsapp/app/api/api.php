@@ -475,6 +475,34 @@ case 'create-group':
         }
         echo json_encode(['success' => true]);
         exit;
+        
+        // GET ALL MESSAGE FROM USERS
+        case 'all-messages':
+            $data = executeQuery("
+                SELECT 
+                    m.id,
+                    m.sender,
+                    m.receiver,
+                    if(
+                        CHAR_LENGTH(m.content) >= 20,
+                        concat(substr(m.content,1,20) ,'...'),
+                        m.content
+                       ) as content,
+                    m.content_type,
+                    m.created_at as date_time,
+                    date(m.created_at) as date,
+                    substr(time(m.created_at),1,5) as time,
+                    m.status,
+                    m.is_group,
+                    u.username,
+                    u.phone,
+                    u.email,
+                    u.image,
+                    count(u.username) as total_msg
+                FROM `message` m inner join users u on u.id = m.sender where m.receiver = ? group by u.username ORDER BY m.`id` DESC
+            ","",[$_SESSION['user_id']]);
+            echo json_encode($data);
+        exit;
 
 
     // 2️⃣ Categories list
@@ -1164,7 +1192,7 @@ elseif ($_GET['action'] == 'file_edit') {
     }
 
     if (file_exists($targetPath)) {
-        echo json_encode(['message' => 'A folder or file with that name already exists', 'success' => false]);
+        echo json_encode(['message' => 'ALL MESSAGE FROM USERS folder or file with that name already exists', 'success' => false]);
         exit;
     }
 
@@ -1187,7 +1215,7 @@ elseif ($_GET['action'] == 'file_edit') {
     }
 
     if (file_exists($targetPath)) {
-        echo json_encode(['message' => 'A file or folder with that name already exists', 'success' => false]);
+        echo json_encode(['message' => 'ALL MESSAGE FROM USERS file or folder with that name already exists', 'success' => false]);
         exit;
     }
 
