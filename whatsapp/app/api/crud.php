@@ -1,6 +1,15 @@
 <?php
 header('Content-Type: application/json');
-require_once '../system/cogs/db.php';
+// this is because you can use this file in different project level make sure you includes the database connection file
+if (file_exists("../system/cogs/db.php")) {
+    include_once '../system/cogs/db.php';
+}
+if (file_exists("../../system/cogs/db.php")) {
+    include_once '../../system/cogs/db.php';
+}
+if (file_exists("app/system/cogs/db.php")) {
+    include_once 'app/system/cogs/db.php';
+}
 
 $response = ['success' => false, 'message' => 'Invalid request'];
 

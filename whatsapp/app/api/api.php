@@ -1,8 +1,10 @@
  <?php
  include_once 'db_helper.php';
+ include_once 'crud.php';
  $path = "/clone/whatsapp/";
  header("Content-Type:application/json");
  session_start();
+ $id = $_SESSION['user_id'];
 /**
  * Get detailed info about a filesystem entry (file or directory).
  *
@@ -21,6 +23,134 @@
  *  - modified_at (timestamp)
  *  - accessed_at (timestamp)
  */
+
+class validator{
+    function isEmpty(array $data, $params = []) {
+        foreach($data as $index => $d){
+            if(empty($d)) {echo json_encode(['success'=>false, 'message'=>$params[$index]??''.' is empty']);exit;}
+            else continue;
+        }
+        return false;
+    }
+    function isCSV(array $data) {
+        foreach($data as $d){
+            if (count(explode(',', $d)) <= 1) {echo json_encode(['success'=>false, 'message'=>$d.' is not CSV']);exit;}
+        }
+        return true;
+    }
+
+    function isChunk(array $data, string $sep = ',') {
+        foreach($data as $d){
+            if (count(explode($sep, $d)) <= 1) {echo json_encode(['success'=>false, 'message'=>$d.' is not CSV']);exit;}
+        }
+        return true;
+    }
+
+    function isNumber(array $data) {
+        foreach($data as $d){
+            $d = (int)$d;
+            if (!is_int($d)) {echo json_encode(['success'=>false, 'message'=>$d.' is not a number']);exit;}
+        }
+        return true;
+    }
+} 
+$validator = new validator();
+
+class send{
+    function __construct($message, $receiver, $sender, $data) {
+        $this->message = $message;
+        $this->receiver = $receiver;
+        $this->sender = $sender;
+        $this->data = $data;
+    }
+    public function document($file) {
+        
+    }
+    public function photo($data) {
+        
+    }
+    public function video($data) {
+        
+    }
+    public function audio($data) {
+        
+    }
+    public function poll($data) {
+        
+    }
+    public function event($data) {
+        
+    }
+    public function new_sticker($data) {
+        
+    }
+    public function catalog($data) {
+        
+    }
+    public function quick_replay($data) {
+        
+    }
+    public function location($data) {
+        
+    }
+}
+
+
+class profile{
+     public function __construct($id) {
+        $this->id = $id;
+     }
+     public static function upload($files) {
+        if(!is_array($files)){
+            return;
+        }
+          // Handles Dropzone uploads
+    $basePath = '../../' . ltrim($_GET['path'] ?? $_GET['file'], './');
+
+    if (!is_dir($basePath)) {
+        echo json_encode(['success' => false, 'message' => 'Invalid upload directory']);
+        exit;
+    }
+
+    if (!empty($_FILES['file']['name'])) {
+                $tmp = $_FILES['file']['tmp_name'];
+                $name = basename($_FILES['file']['name']);
+                $target = rtrim($basePath, '/') . '/' . $name;
+
+                if (move_uploaded_file($tmp, $target)) {
+                    echo json_encode(['success' => true, 'message' => 'File uploaded successfully']);
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Failed to save uploaded file']);
+                }
+            } else {
+                echo json_encode(['success' => false, 'message' => 'No file uploaded']);
+            }
+     }
+     public function change_photo($path, $type = 'profile') {
+        $files = $_FILES['file']??[];
+        upload($files,$path);
+        switch ($type) {
+            case 'profile':
+                $data = executeQuery("
+                    UPDATE users set image=? where id = ?
+                ","",[$path,$id]);
+                return json_encode($data);
+                break;
+            case 'background':
+                $data = executeQuery("
+                    UPDATE users set background=? where id = ?
+                ","",[$path,$id]);
+                return json_encode($data);
+                break;
+            
+            default:
+                return json_encode(["message"=>'Invalid option', 'success'=>false,'data'=>null]);
+                break;
+        }
+     }
+
+
+}
 
 $tables = executeQuery("SHOW TABLES","COLUMN")['data'];
 
@@ -253,7 +383,7 @@ switch ($action) {
         echo json_encode(['id' => $user_id, 'success' => true, 'message' =>'successfully retrived', 'data' => $grouped]);
         exit;
 
-case 'create-group':
+    case 'create-group':
     $created_by = $_SESSION['user_id'] ?? 0;
 
     if (!$created_by) {
@@ -389,16 +519,165 @@ case 'create-group':
             $user_id = $_SESSION['user_id']; // the logged-in user’s ID
             echo json_encode(['success' => true, 'message' =>'successfully retrived', 'id' => $user_id]);
         exit;
+    case 'get-my-messages':
+        $sender = $_POST['sender'] ?? $_GET['sender'] ?? '';
+        $receiver = $_POST['receiver'] ?? $_GET['receiver'] ?? '';
+        if (
+            isset($receiver) && 
+            !empty($receiver) && 
+            is_numeric($receiver) && 
+            isset($sender) && 
+            !empty($sender) && 
+            is_numeric($sender)
+        ) {
+            $not_me = $receiver == $_SESSION['user_id'] ? $sender : $receiver;
+            //$sql = "SELECT *,m.id as mid FROM message m inner join users u on u.id=m.sender where m.sender = $sender and m.receiver = $receiver or m.sender = $receiver and m.receiver = $sender ORDER by m.created_at asc";
+            $messages = executeQuery("SELECT 
+                    
+                    m.*, m.id as mid, substr(time(m.created_at),1,5) as `time`
+
+
+                FROM message m inner join users u on u.id=m.sender where m.sender = ? and m.receiver = ? or m.sender = ? and m.receiver = ? ORDER by m.created_at asc","",[$sender,$receiver,$receiver,$sender])['data'];
+            $not_me_data = executeQuery("SELECT 
+                    `id`,
+                    `username`,
+                    `email`,
+                    `phone`,
+                    `image`,
+                    `created_at`,
+                    `updated_at`,
+                    `status`
+             FROM users where id = ? limit 1", "", [$not_me])['data'][0]??[];
+            echo json_encode(['success'=>true, 'message'=>'data retrived', 'messages'=>$messages, 'not-me'=>$not_me_data]);
+            }else{
+                echo json_encode(['success' => false, 'message' =>'Invalid data']);
+                exit;
+            }
+            exit;
     case 'send':
         $sender = $_POST['sender']??null;
         $receiver = $_POST['receiver']??null;
         $content = $_POST['content']??null;
+        $reply = $_POST['reply']??null;
         $type = $_POST['type']??null;
         $is_group = $_POST['is_group']??null;
-        $stmt = $pdo->prepare(" INSERT INTO `message`(`sender`, `receiver`, `content`, `content_type`, `created_at`, `updated_at`, `status`, `is_group`, `deleted_by_sender`, `deleted_by_receiver`) VALUES(?, ?, ?, ?, current_timestamp(), current_timestamp(), 'pending', ?, null, null)");
-        $stmt->execute([$sender, $receiver, $content, $type, $is_group ]);
+        $stmt = $pdo->prepare(" INSERT INTO `message`(`sender`, `receiver`, `content`, `content_type`, `created_at`, `updated_at`, `status`, `is_group`, `deleted_by_sender`, `deleted_by_receiver`, `reply`) VALUES(?, ?, ?, ?, current_timestamp(), current_timestamp(), 'pending', ?, null, null, ?)");
+        $stmt->execute([$sender, $receiver, $content, $type, $is_group, $reply]);
         header("location:$path?r=$receiver&s=$sender");
         echo json_encode(['success' => true, 'message'=>"message sent"]);
+        exit;
+    case 'forward':
+        $users = $_POST['users']??$_GET['users']??'';
+        $messages = $_POST['messages']??$_GET['messages']??'';
+        $from=$_POST['from'] ?? $_GET['from'] ?? '';
+        $isgroup = $_POST['is_group']??$_GET['is_group']??'';
+        $validator->isEmpty([$users,$messages,$from]);
+        $validator->isCSV([$users, $messages]);
+        $validator->isNumber([$from,$isgroup]);
+        $users = explode(',', $users);
+        $messages= explode(',', $messages);
+        $isgroup = $isgroup == 1?1:0;
+        foreach ($users as $u){
+            foreach($messages as $m){
+                $pdo->beginTransaction();
+                executeQuery("INSERT INTO forwards (sender, receiver, message_id) values (?, ?, ?)","",[$from, $u, $m]);
+                executeQuery("INSERT INTO message (sender, receiver, content, content_type, is_group) values (?, ?, ?, ?, ?)","",[$from, $u, $m, 'forward', $isgroup]);
+                $pdo->commit();
+            }
+        }
+         echo json_encode([
+                'success' => true,
+                'message' => 'Message forwarded'
+            ]);
+       exit; 
+
+    case 'delete-selected-messages':
+        $messages = $_POST['messages'] ?? $_GET['messages'] ?? null;
+        $id= $_SESSION['user_id']??null;
+        $isgroup = $_POST['is_group']??$_GET['is_group']??'';
+        $validator->isEmpty([$messages,$id],['messages','id']);
+        $validator->isNumber([$id,$isgroup]);
+        $isgroup = $isgroup == 1?1:0;
+        $messages = explode(',', $messages);
+        $pdo->beginTransaction();
+        foreach($messages as $m){
+            $sql = "UPDATE `message` SET deleted_by_sender = if(sender = ?,1,0), deleted_by_receiver = if(receiver = ?,1,0) where id = ?;";
+            executeQuery($sql,'',[$id,$id,$m]);
+        }
+        $pdo->commit();
+        echo json_encode([
+            'success' => true,
+            'message' => 'Message deleted'
+        ]);
+       exit;
+    case 'star-messages':
+        $messages = $_POST['messages'] ?? $_GET['messages'] ?? null;
+        $id= $_SESSION['user_id']??null;
+        $isgroup = $_POST['is_group']??$_GET['is_group']??'';
+        $validator->isEmpty([$messages,$id],['messages','id']);
+        $validator->isNumber([$id,$isgroup]);
+        $isgroup = $isgroup == 1?1:0;
+        $messages = explode(',', $messages);
+        $pdo->beginTransaction();
+        foreach($messages as $m){
+            $sql = "INSERT INTO `started_messages`(message_id, started_by) VALUES (?, ?)";
+            executeQuery($sql,'',[$m,$id]);
+        }
+        $pdo->commit();
+        echo json_encode([
+            'success' => true,
+            'message' => 'Message Stared'
+        ]);
+       exit; 
+    case 'download-messages':
+            $fullPath = '../../';
+            $messages = $_POST['messages']??$_GET['messages']??'';
+            $msg_arr = explode(',', $messages);
+            $prm = array_map(fn($item) => '?', $msg_arr);
+            $prm = implode(',', $prm);
+            $validator->isEmpty([$messages]);
+            $validator->isCSV([$messages]);
+            $validator->isNumber($msg_arr);
+            $fetch = executeQuery("SELECT 
+                                    m.id AS mid,
+                                    u.id AS uid,
+                                    m.sender,
+                                    m.receiver,
+                                    sn.username AS 'from',
+                                    rc.username AS 'to',
+                                    m.content as message,
+                                    date(m.created_at) as 'date',
+                                    substr(time(m.created_at),1,5) as 'time'
+                                FROM message m
+                                    INNER JOIN users u ON u.id = m.sender
+                                    INNER JOIN users sn ON sn.id = m.sender
+                                    INNER JOIN users rc ON rc.id = m.receiver
+                                WHERE m.id IN ($prm)
+                                AND (m.sender = ? OR m.receiver = ?);", 
+                    '', 
+                    array_merge($msg_arr, [$id, $id]))['data']??[];
+            foreach ($fetch as $value) {
+                array_shift($value);
+                array_shift($value);
+                array_shift($value);
+                array_shift($value);
+                $msg[] = $value;
+            }
+            $msg = json_encode($msg);
+            // echo $msg;
+            // exit;
+            file_put_contents("$fullPath.json", $msg);
+            // Set headers to force download
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . "uruganiriro-chat.json" . '"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize("$fullPath.json"));
+            // Clear output buffer and read the file
+            readfile("$fullPath.json");
+            unlink("$fullPath.json");
         exit;
     case 'upload-file':
 
@@ -454,7 +733,191 @@ case 'create-group':
         $perms = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
         echo json_encode(['success' => true, 'data' => $perms]);
         exit;
-
+    case 'mute-notifications':
+        $time = $_POST['time']??$_GET['time']??null;
+        $muted_id = $_POST['user']??$_GET['user']??null;
+        $now = new DateTime();
+        $plus8Hours = clone $now;
+        $plus8Hours->modify('+8 hours');
+        $plus1Week = clone $now;
+        $plus1Week->modify('+1 week');
+        $now = $now->format("Y-m-d H:i:s");
+        switch($time){
+            case '1 week':
+                $end = $plus1Week->format("Y-m-d H:i:s");
+                break;
+            case '8 hours':
+                $end = $plus8Hours->format("Y-m-d H:i:s");
+                break;
+            case'always':
+                $end = NULL;
+                break;
+            default:
+            $end = NULL;
+        }
+        $data = executeQuery("INSERT INTO `mute_notifications`(
+                `muted_user`,
+                `muted_by`,
+                `muted_at`,
+                `ended_at`,
+                `muted_option`
+            )
+            VALUES(
+                ?, ?, ?, ?, ?
+            )",'',[$muted_id,$id,$now,$end,$time]);
+            echo json_encode($data);
+        exit;
+    case 'disappearing-message':
+                $time = $_POST['time']??$_GET['time']??null;
+                $receiver = $_POST['user']??$_GET['user']??null;
+                $now = new DateTime();
+                $plus24Hours = clone $now;
+                $plus24Hours->modify('24 hours');
+                $plus1Week = clone $now;
+                $plus1Week->modify('+7 days');
+                $plus3Months = clone $now;
+                $plus3Months->modify('+90 days');
+                $now = $now->format("Y-m-d H:i:s");
+                switch($time){
+                    case '24 hours':
+                        $end = $plus24Hours->format("Y-m-d H:i:s");
+                        break;
+                    case '7 days':
+                        $end = $plus1Week->format("Y-m-d H:i:s");
+                        break;
+                    case'90 days':
+                        $end = $plus3Months->format("Y-m-d H:i:s");
+                        break;
+                    default:
+                    $end = NULL;
+                }
+                $data = executeQuery("INSERT INTO `disappearing_messages`(
+                        `sender`,
+                        `receiver`,
+                        `start_date`,
+                        `end_date`,
+                        `time_interval`
+                    )
+                    VALUES(
+                        ?, ?, ?, ?, ?
+                    )",'',[$id,$receiver,$now,$end,$time]);
+                    echo json_encode($data);
+                exit;
+    case 'report-user':
+                $receiver = $_POST['user']??$_GET['user']??null;
+                $data = executeQuery("INSERT INTO `reported_users`(
+                        `sender`,
+                        `receiver`
+                    )
+                    VALUES(
+                        ?, ?
+                    )",'',[$id,$receiver]);
+                    echo json_encode($data);
+                exit;
+    case 'client-notes':
+            $receiver = $_POST['user']??$_GET['user']??null;
+            $note = $_POST['note']??$_GET['note']??null;
+            $data = executeQuery("INSERT INTO `client_notes`(
+                    `sender`,
+                    `receiver`,
+                    `note`
+                )
+                VALUES(
+                    ?, ?, ?
+                )",'',[$id,$receiver, $note]);
+                echo json_encode($data);
+            exit;
+    case 'reaction':
+            $receiver = $_POST['user']??$_GET['user']??null;
+            $reaction = $_POST['reaction']??$_GET['reaction']??null;
+            $data = executeQuery("INSERT INTO `reactions`(
+                    `sender`,
+                    `receiver`,
+                    `reaction`
+                )
+                VALUES(
+                    ?, ?, ?
+                )",'',[$id,$receiver, $reaction]);
+                echo json_encode($data);
+            exit;
+    case 'pin-message':
+        $time = $_POST['time']??$_GET['time']??null;
+        $receiver = $_POST['user']??$_GET['user']??null;
+        $message = $_POST['message']??$_GET['message']??null;
+        $validator->isEmpty([$message,$receiver,$time],['message','receiver','time']);
+        $validator->isNumber([$message,$receiver,$time]);
+        $now = new DateTime();
+        $plus24Hours = clone $now;
+        $plus24Hours->modify('24 hours');
+        $plus1Week = clone $now;
+        $plus1Week->modify('+7 days');
+        $plus3Months = clone $now;
+        $plus3Months->modify('+90 days');
+        $now = $now->format("Y-m-d H:i:s");
+        switch($time){
+            case '24 hours':
+                $end = $plus24Hours->format("Y-m-d H:i:s");
+                break;
+            case '7 days':
+                $end = $plus1Week->format("Y-m-d H:i:s");
+                break;
+            case'90 days':
+                $end = $plus3Months->format("Y-m-d H:i:s");
+                break;
+            default:
+                $end = $plus1Week->format("Y-m-d H:i:s");
+        }
+        $data = executeQuery("INSERT INTO `pinned_messages`(
+                `message_id`,
+                `sender`,
+                `receiver`,
+                `end_date`,
+                `time_interval`
+            )
+            VALUES(
+                ?, ?, ?, ?, ?
+            )",'',[$message, $id, $receiver, $end, $time]);
+            echo json_encode($data);
+        exit;
+    case 'block-user':
+                $receiver = $_POST['user']??$_GET['user']??null;
+                $data = executeQuery("INSERT INTO `blocked_users`(
+                        `sender`,
+                        `receiver`
+                    )
+                    VALUES(
+                        ?, ?
+                    )",'',[$id,$receiver]);
+                    echo json_encode($data);
+                exit;
+    case 'clear-chat':
+                $receiver = $_POST['user']??$_GET['user']??null;
+                $data = executeQuery("INSERT INTO `clear_chats`(
+                        `sender`,
+                        `receiver`
+                    )
+                    VALUES(
+                        ?, ?
+                    )",'',[$id,$receiver]);
+                    echo json_encode($data);
+                exit;
+    case 'delete-chat':
+                $receiver = $_POST['user']??$_GET['user']??null;
+                $data = executeQuery("INSERT INTO `delete_chats`(
+                        `sender`,
+                        `receiver`
+                    )
+                    VALUES(
+                        ?, ?
+                    )",'',[$id,$receiver]);
+                    echo json_encode($data);
+                exit;
+    case 'message-info':
+            $message = $_POST['message']??$_GET['message']??null;
+            $data = executeQuery("SELECT * FROM message where id = ?",'',[$message])['data']??[];
+            echo json_encode($data);
+            exit;
+        
     case 'create_role':
         $name = trim($_POST['name'] ?? '');
         if ($name === '') exit(json_encode(['success' => false, 'error' => 'Role name required']));
@@ -477,18 +940,26 @@ case 'create-group':
         exit;
         
         // GET ALL MESSAGE FROM USERS
-        case 'all-messages':
+    case 'all-messages':
             $data = executeQuery("
                 SELECT 
                     m.id,
                     m.sender,
                     m.receiver,
-                    m.content,
+                    if(
+                        CHAR_LENGTH(m.content) >= 20,
+                        concat(substr(m.content,1,20) ,'...'),
+                        m.content
+                       ) as content,
                     m.content_type,
-                    m.created_at,
+                    m.created_at as date_time,
+                    date(m.created_at) as date,
+                    substr(time(m.created_at),1,5) as time,
                     m.status,
                     m.is_group,
                     u.username,
+                    u.phone,
+                    u.email,
                     u.image,
                     count(u.username) as total_msg
                 FROM `message` m inner join users u on u.id = m.sender where m.receiver = ? group by u.username ORDER BY m.`id` DESC
