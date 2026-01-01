@@ -1,6 +1,6 @@
  <?php
  include_once 'db_helper.php';
- include_once 'crud.php';
+//  include_once 'crud.php';
  $path = "/clone/whatsapp/";
  header("Content-Type:application/json");
  session_start();
@@ -64,16 +64,16 @@ class send{
         $this->data = $data;
     }
     public function document($file) {
-        
+        handleFileUploads($file);
     }
     public function photo($data) {
-        
+        handleFileUploads($file);
     }
     public function video($data) {
-        
+        handleFileUploads($file);
     }
     public function audio($data) {
-        
+        handleFileUploads($file);
     }
     public function poll($data) {
         

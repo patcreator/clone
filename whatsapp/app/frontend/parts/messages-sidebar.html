@@ -1,0 +1,110 @@
+ <div class = "aside-contents max-h-[90vh] overflow-y-auto" id="aside-contents">
+                <!-- Chats Header -->
+                <div class="p-4 border-b border-gray-800 flex justify-between items-center transition-colors duration-300">
+                    <h5 class="text-lg font-semibold">Chats</h5>
+                    <div class="flex space-x-2">
+                        <button onclick="getPart('new-chat-menu')" class="w-9 h-9 rounded-full bg-gray-800 hover:bg-gray-700 flex items-center justify-center transition-colors duration-300">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button  onclick="getPart('sidebar-menu','#chatsDropdown')" id="dropdownMenuButton" data-dropdown-toggle="chatsDropdown" class="w-9 h-9 rounded-full bg-gray-800 hover:bg-gray-700 flex items-center justify-center transition-colors duration-300">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        
+                        <!-- Dropdown menu -->
+                        <div id="chatsDropdown" class="hidden z-10 bg-gray-800 divide-y divide-gray-700 rounded-lg shadow w-64 transition-colors duration-300">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search Box -->
+                <div class="p-4">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <i class="fas fa-search text-gray-500"></i>
+                        </div>
+                        <input type="text" class="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-100 text-sm rounded-full focus:ring-purple-600 focus:border-purple-600 block w-full pl-10 p-2.5 transition-colors duration-300" placeholder="Search or start a new chat">
+                    </div>
+                </div>
+
+                <!-- Filter Buttons -->
+                <div class="px-4 pb-3 flex space-x-2 overflow-x-auto">
+                    <a href="/clone/whatsApp/" class="px-2 py-1 text-sm rounded-full transition-colors duration-300 <?= (!isset($_GET['favorite']) && !isset($_GET['group']) && !isset($_GET['unread'])) ? 'bg-gray-700 text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700' ?>">
+                        All
+                    </a>
+                    <a href="/clone/whatsApp/?unread" class="px-2 py-1 text-sm rounded-full transition-colors duration-300 <?= isset($_GET['unread']) ? 'bg-gray-700 text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700' ?>">
+                        Unread
+                    </a>
+                    <a href="/clone/whatsApp/?favorite" class="px-2 py-1 text-sm rounded-full transition-colors duration-300 <?= isset($_GET['favorite']) ? 'bg-gray-700 text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700' ?>">
+                        Favorites
+                    </a>
+                    <a href="/clone/whatsApp/?group" class="px-2 py-1 text-sm rounded-full transition-colors duration-300 <?= isset($_GET['group']) ? 'bg-gray-700 text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700' ?>">
+                        Groups
+                    </a>
+                </div>
+
+                <!-- Here getPart not-internet if nessesaly -->
+                <div id="no-internet"></div>
+
+                <!-- Chats List -->
+                <div class="flex-1 overflow-y-auto px-2">
+                    <?php 
+                        if (isset($_GET['unread'])) {
+                            $sql = "SELECT *, m.id as mid, count(*) as nbsent FROM message m inner join users u on u.id=m.sender where m.receiver = $id and m.status in('pending','sent') group by m.sender";
+                            $msg_txt = "Messages";
+                            $sent_by_me = '';
+                        } elseif (isset($_GET['favorite'])) {
+                            $sql = "SELECT *,m.id as mid FROM favorites f inner join message m on f.item_id=m.id inner join users u on m.receiver = u.id where m.sender = $id or m.receiver = $id";
+                            $msg_txt = "Favorites";
+                            $sent_by_me = '';
+                        } elseif (isset($_GET['group'])) {
+                            $sql = "SELECT *,m.id as mid FROM message m inner join users u on u.id=m.sender where m.sender = $id and m.is_group = 1";
+                            $msg_txt = "Groups";
+                            $sent_by_me = '';
+                        } else {
+                            $sql = "SELECT *, m.id as mid, count(*) as nbsent FROM message m inner join users u on u.id=m.sender where m.receiver = $id and m.status = 'pending' group by m.sender";
+                            $msg_txt = "Messages";
+                            $sent_by_me = executeQuery("SELECT *, m.id as mid FROM message m inner join users u on u.id=m.receiver where m.sender = $id group by m.receiver ")['data'];
+                        }
+                        $exclude = [];
+                        $data = executeQuery($sql)['data'];
+                        if (empty($data) && (isset($_GET['favorite']) || isset($_GET['group']) || isset($_GET['unread']))) {
+                            echo '<div class="mx-4 p-3 bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-red-400 transition-colors duration-300">' . $msg_txt . ' not found</div>';
+                        }
+                    ?>
+                    
+                    <?php foreach ($data as $item) { ?>
+                    <a href="/clone/whatsApp/?r=<?= $item['receiver'] ?>&s=<?= $item['sender'] ?>&<?= $query_string ?>" class="flex items-center p-3 dark:hover:bg-gray-800  hover:bg-gray-200 rounded-xl mb-1 transition-colors duration-300 <?= ([$item['receiver'],$item['sender']] == [$_GET['r']??0,$_GET['s']??0]) ? 'bg-gray-800' : '' ?>">
+                        <img src="/clone/whatsApp/app/system/filemanager/images/avatars/<?= empty($item['image']) ? 'default.png' : $item['image'] ?>" class="w-12 h-12 rounded-full object-cover mr-3">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-start">
+                                <p class="text-sm font-semibold truncate"><?= $item['username'] ?></p>
+                                <span class="text-xs text-purple-400"><?= date("h:i", strtotime($item['created_at'])) ?></span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <p class="text-sm text-gray-400 truncate"><?= strlen($item['content']) > 20 ? substr($item['content'], 0, 20) . '...' : $item['content'] ?></p>
+                                <?php if (isset($item['nbsent']) && $item['nbsent'] > 0) { ?>
+                                <span class="bg-purple-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"><?= $item['nbsent'] ?></span>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </a>
+                    <?php $exclude[] = [$item['receiver'],$item['sender']]; } ?>
+                    
+                    <?php 
+                    if (!isset($_GET['favorite']) && !isset($_GET['group']) && !isset($_GET['unread'])) {
+                        foreach ($sent_by_me as $item) { 
+                            if (in_array([$item['sender'],$item['receiver']], $exclude)) continue;
+                    ?>
+                    <a href="/clone/whatsApp/?r=<?= $item['receiver'] ?>&s=<?= $item['sender'] ?>" class="flex items-center p-3 dark:hover:bg-gray-800 hover:bg-gray-200 rounded-xl mb-1 transition-colors duration-300 <?= ([$item['receiver'],$item['sender']] == [$_GET['r']??0,$_GET['s']??0]) ? 'bg-gray-800' : '' ?>">
+                        <img src="/clone/whatsApp/app/system/filemanager/images/avatars/<?= empty($item['image']) ? 'default.png' : $item['image'] ?>" class="w-12 h-12 rounded-full object-cover mr-3">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex justify-between items-start">
+                                <p class="text-sm font-semibold truncate"><?= $item['username'] ?></p>
+                                <span class="text-xs text-purple-400"><?= date("h:i", strtotime($item['created_at'])) ?></span>
+                            </div>
+                            <p class="text-sm text-gray-400 truncate"><?= strlen($item['content']) > 20 ? substr($item['content'], 0, 20) . '...' : $item['content'] ?></p>
+                        </div>
+                    </a>
+                    <?php }} ?>
+                </div>
+               </div>
